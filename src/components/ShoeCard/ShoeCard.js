@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
+import {keyframes} from 'styled-components';
 
 import { WEIGHTS } from '../../constants';
 import { formatPrice, pluralize, isNewShoe } from '../../utils';
@@ -35,11 +36,13 @@ const ShoeCard = ({
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
-          <Image alt="" src={imageSrc} />
-          {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
-          {variant === 'new-release' && (
-            <NewFlag>Just released!</NewFlag>
-          )}
+          <AnimationWrapper>
+            <Image alt="" src={imageSrc} />
+            {variant === 'on-sale' && <SaleFlag>Sale</SaleFlag>}
+            {variant === 'new-release' && (
+              <NewFlag>Just released!</NewFlag>
+            )}
+          </AnimationWrapper>
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
@@ -68,6 +71,18 @@ const ShoeCard = ({
   );
 };
 
+const balance = keyframes`
+  0% {
+    transform: rotate(0deg);    
+  }
+  50%{
+    transform: rotate(-50deg);
+  }
+  100%{
+    transform: rotate(10deg);
+  }
+`
+
 const Link = styled.a`
   text-decoration: none;
   color: inherit;
@@ -75,13 +90,34 @@ const Link = styled.a`
 
 const Wrapper = styled.article``;
 
+
 const ImageWrapper = styled.div`
   position: relative;
+  
 `;
+
+const AnimationWrapper = styled.div`
+  border: solid transparent;
+  border-radius: 16px 16px 4px 4px;
+  overflow: hidden;
+
+  &:hover img{
+    transform: scale(1.1);    
+    transition: transform 200ms;    
+  }
+
+  &:hover div{
+    animation: ${balance} 2000ms infinite alternate ease-in-out;
+    
+  }
+`
 
 const Image = styled.img`
   width: 100%;
-  border-radius: 16px 16px 4px 4px;
+  transition: transform 750ms ease-in ;
+  transform-origin: 60% 70%; 
+  display:block;
+  will-change:transform;
 `;
 
 const Row = styled.div`
@@ -121,6 +157,7 @@ const Flag = styled.div`
   font-weight: ${WEIGHTS.bold};
   color: var(--color-white);
   border-radius: 2px;
+  transform-origin: 95% 5%;    
 `;
 
 const SaleFlag = styled(Flag)`

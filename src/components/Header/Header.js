@@ -12,6 +12,16 @@ import VisuallyHidden from '../VisuallyHidden';
 const Header = () => {
   const [showMobileMenu, setShowMobileMenu] = React.useState(false);
 
+  const headerInfo =[
+    {title: "Sale", link:"/sale"},
+    {title: "New Releases", link:"/new"},
+    {title: "Men", link:"/men"},
+    {title: "Women", link:"/women"},
+    {title: "Kids", link:"/lids"},
+    {title: "Collections", link:"/collections"},
+
+  ]
+
   return (
     <header>
       <SuperHeader />
@@ -20,12 +30,13 @@ const Header = () => {
           <Logo />
         </LogoWrapper>
         <DesktopNav>
-          <NavLink href="/sale">Sale</NavLink>
-          <NavLink href="/new">New&nbsp;Releases</NavLink>
-          <NavLink href="/men">Men</NavLink>
-          <NavLink href="/women">Women</NavLink>
-          <NavLink href="/kids">Kids</NavLink>
-          <NavLink href="/collections">Collections</NavLink>
+            {headerInfo.map((header)=>(
+              <AnimationWrapper>
+                <NavLink href={header.link}>{header.title}</NavLink> 
+                <BoldNavLink href={header.link}>{header.title}</BoldNavLink>
+            </AnimationWrapper>
+            ))}
+          
         </DesktopNav>
         <MobileActions>
           <ShoppingBagButton>
@@ -75,6 +86,7 @@ const DesktopNav = styled.nav`
   display: flex;
   gap: clamp(1rem, 9.2vw - 4.5rem, 3.5rem);
   margin: 0px 48px;
+  overflow: hidden;
 
   @media ${QUERIES.tabletAndSmaller} {
     display: none;
@@ -115,15 +127,45 @@ const Filler = styled.div`
 `;
 
 const NavLink = styled.a`
+  display:inline-block;
+  white-space:nowrap;
   font-size: 1.125rem;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--color-gray-900);
   font-weight: ${WEIGHTS.medium};
+  transition: transform 700ms; 
+  position: absolute;
+  top:0;
+  left:0;
 
-  &:first-of-type {
+  
+  
+`;
+
+const BoldNavLink = styled(NavLink)`
+    transform: translateY(100%);
+    position: revert;
+    font-weight: ${WEIGHTS.bold};
+`
+
+  const AnimationWrapper = styled.div`
+    position: relative;
+    &:first-of-type a{
     color: var(--color-secondary);
   }
-`;
+    
+    &:hover ${NavLink}{
+      transform: translateY(-100%);
+      transition: transform 400ms; 
+    }
+
+    &:hover ${BoldNavLink}{
+      transform: translateY(0%);
+      transition: transform 400ms; 
+    }
+
+ 
+  `
 
 export default Header;
